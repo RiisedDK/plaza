@@ -1,0 +1,15 @@
+.product-page-labels {
+  z-index: 15;
+  position: absolute;
+  font-family: Twentieth Century, sans-serif;
+}
+
+.product-label {
+  font-size: 1rem;
+  padding: 7px 12px;
+  display: inline-block;
+  background-color: white;
+  line-height: 1rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}

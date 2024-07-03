@@ -1,0 +1,10 @@
+<script type="text/javascript">
+  // Check if the current URL contains "/en/"
+  var url = window.location.href;
+  if (url.includes('/en/')) {
+    // Remove "/en/" from the URL
+    var newUrl = url.replace('/en/', '/');
+    // Perform the redirect
+    window.location.href = newUrl;
+  }
+</script>

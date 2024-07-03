@@ -1,0 +1,44 @@
+{% liquid
+  assign compare_at_price = product.compare_at_price
+  assign price = product.price
+  assign saved_amount = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round
+
+  if saved_amount
+    assign saved_amount = "-" | append: saved_amount | append: '%'
+    assign sale_bg = shop.metaobjects.label.sale.background_color
+    assign sale_text = shop.metaobjects.label.sale.text_color
+  endif
+
+  assign assigned_labels = product.metafields.custom.labels.value
+  assign first_label = assigned_labels | first
+
+  if saved_amount and first_label.text == 'Sale'
+    assign loop_limit = 2
+  elsif saved_amount
+    assign loop_limit = 1
+  else
+    assign loop_limit = 2
+  endif
+%}
+
+
+<div 
+  class="product-page-labels" 
+  id="product-label-{{ section.id }}">
+  {%- if saved_amount and saved_amount != '-0%' -%}
+    <span style="--bg-color: {{ sale_bg }}; --text-color: {{ sale_text }}" class="product-label">
+      {{ saved_amount }}
+    </span>
+  {%- endif -%}
+
+
+  {%- if assigned_labels -%}
+    {%- for label in assigned_labels limit: loop_limit -%}
+      {%- if label.text != 'Sale' -%}
+        <span style="--bg-color: {{ label.background_color }}; --text-color: {{ label.text_color }}" class="product-label">
+          {{ label.text }}
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+  {% endif %}
+  </div>

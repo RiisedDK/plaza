@@ -1,0 +1,150 @@
+	<script src="https://a.klaviyo.com/media/js/onsite/onsite.js"></script>
+	<script>
+		var klaviyo = klaviyo || [];
+		klaviyo.init({
+		  account: "{{ settings.klaviyo_id}}",
+		  list: "V2vwAM",
+		  platform: "shopify"
+		});
+		klaviyo.enable("backinstock",{ 
+		trigger: {
+		  product_page_text: "Notify Me When Available",
+		  product_page_class: "btn",
+		  product_page_text_align: "center",
+		  product_page_margin: "0px",
+		  replace_anchor: false
+		},
+		modal: {
+		headline: "{{ 'products.product.back_in_stock.title' | t}}",
+		body_content: "{{ 'products.product.back_in_stock.subtitle' | t}}",
+		email_field_label: "{{ 'products.product.back_in_stock.email' | t}}",
+		button_label: "{{ 'products.product.back_in_stock.button' | t}}",
+		subscription_success_label: "{{ 'products.product.back_in_stock.feedback_html' | t}}",
+		newsletter_subscribe_label: "{{ 'products.product.back_in_stock.marketing_consent' | t}}",
+		subscribe_checked: false,
+		footer_content: '',
+		drop_background_color: "#000",
+		background_color: "#fff",
+		text_color: "#222",
+		button_text_color: "#fff",
+		button_background_color: "#000",
+		close_button_color: "#ccc",
+		error_background_color: "#fcd6d7",
+		error_text_color: "#C72E2F",
+		success_background_color: "#fff",
+		success_text_color: "#000",
+		additional_styles: `
+			#klaviyo-bis-modal{
+			  font-family: 'Poppins', sans-serif;
+			  position: absolute;
+			  right: 0;
+			  height: 100%;
+			  max-width: 481px;
+			  width: 481px;
+			}
+		
+			#klaviyo-bis-modal #container {
+			  margin-top: 0;
+			  height: 100%;
+			  width: 100%;
+			}
+			#klaviyo-bis-modal  #container .modal-title {
+			  font-size: 12px;
+			  font-weight: 500;
+			  text-transform: uppercase;
+			}
+			@media only screen and (max-width: 767px){
+				#klaviyo-bis-modal  #container .modal-title {
+					font-size: 16px;
+				}
+			}
+  
+			#klaviyo-bis-modal  #container .modal-title + p {
+			  color: #89856E;
+			  font-size: 12px;
+			}
+  
+			#klaviyo-bis-modal  #container #newsletter_subscription label {
+			  font-size: 12px;
+			}
+			#klaviyo-bis-modal  #container #newsletter_subscription p {
+				margin-top: 26px;
+				margin-bottom: 26px;
+			}
+			#klaviyo-bis-modal  #container .btn.btn-success {
+			  border-radius: 0;
+			  font-size: 16px;
+			  font-weight: 400;
+			  font-family: "Tw Cen MT Std";
+			  display: flex;
+			  justify-content: center;
+			  align-items: center;
+			}
+
+			#klaviyo-bis-modal  #container .btn.btn-success svg{
+				margin-right: 9px;
+				height: 15px;
+    			width: 18px;
+			}
+			#klaviyo-bis-modal  #container .btn.btn-success svg path {
+			  fill: #fff;
+			}
+  
+			#klaviyo-bis-modal #container  .form-group .form-control {
+			  border-radius: 0;
+			  border: 0.5px solid #000;
+			  font-size: 12px;
+			  color: #89856E;
+			}
+
+			#klaviyo-bis-modal #container  .form-group .form-control:focus {
+			  outline: none
+			}
+			#klaviyo-bis-modal #container #completed_message .klaviyo-bis-close { display: none;}
+
+			#klaviyo-bis-modal #container #completed_message{
+				font-size: 18px;
+				margin-top: 350px;
+			}
+
+			#klaviyo-bis-modal #container #completed_message .feedback-envelope-icon{
+				display: flex;
+				justify-content: center;
+				margin-bottom: 20px;
+			}
+
+			#klaviyo-bis-modal #container button {
+				top: 20px;
+			}
+
+			#klaviyo-bis-modal #container #completed_message .feedback-envelope-icon > svg{
+				font-size: 17px
+			}
+			#variant_select select {
+				appearance: none;
+				background-repeat: no-repeat;
+				background-position: right 0.5rem center;
+				border-radius: 2px;
+				padding: 0.25rem 2rem 0.25rem 0.75rem;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 13 13' fill='none'%3E%3Cpath d='M11.9166 4.33333L6.49992 9.75L1.08325 4.33333L2.04471 3.37188L6.49992 7.82708L10.9551 3.37188L11.9166 4.33333Z' fill='black'/%3E%3C/svg%3E%0A");
+			}
+
+			@media only screen and (max-width: 767px){
+				#klaviyo-bis-modal{
+					width: 100%;
+					max-width: 100%;
+				}
+
+				#klaviyo-bis-modal #container{
+					padding-top: 65px;
+				}
+				#klaviyo-bis-modal #container button {
+					top: 60px;
+				}
+			}
+
+		  `
+  
+		}
+	  });
+	</script> 

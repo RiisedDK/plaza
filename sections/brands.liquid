@@ -1,0 +1,147 @@
+{% liquid
+  assign disable_top_spacing = section.settings.disable_top_spacing
+  assign disable_bottom_spacing = section.settings.disable_bottom_spacing
+
+  assign letters = 'All,0-9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z' | split: ','
+  assign vendors = shop.vendors
+  assign brands = shop.metaobjects.brands
+%}
+
+<div
+  class="section-spacing{% if disable_top_spacing %} section-spacing--disable-top{% endif %}{% if disable_bottom_spacing %} section-spacing--disable-bottom{% endif %}"
+>
+  <div class="brands-list-wrapper row no-padding full-width-row-full">
+    <div class="columns">
+      <div class="brands-letters row slider-items">
+        <div class="columns small-12 carousel" data-wrap-around="false">
+          {%- for letter in letters -%}
+            {% liquid
+              assign brand_available = false
+              for vendor in vendors
+                paginate brands.values by 250
+                  for brand in brands.values
+                    assign vendor_handle = vendor | handleize
+                    assign brand_handle = brand.system.handle
+                    assign brand_first_letter = brand.name | slice: 0, 1 | append: ''
+                    if vendor_handle == brand_handle
+                      if letter == brand_first_letter
+                        assign brand_available = true
+                        break
+                      endif
+                    endif
+
+                    if letter == '0-9'
+                      for i in (0..9)
+                        assign i = i | append: ''
+                        if vendor_handle == brand_handle
+                          if i == brand_first_letter
+                            assign brand_available = true
+                            break
+                          endif
+                        endif
+                      endfor
+                    endif
+                  endfor
+                endpaginate
+              endfor
+              if letter == 'All'
+                for vendor in vendors
+                  paginate brands.values by 250
+                    for brand in brands.values
+                      assign vendor_handle = vendor | handleize
+                      assign brand_handle = brand.system.handle
+
+                      if vendor_handle == brand_handle
+                        assign brand_available = true
+                        break
+                      endif
+                    endfor
+                  endpaginate
+                endfor
+              endif
+            %}
+            <div class="carousel__slide slider-item">
+              <a
+                {% if brand_available %}
+                  href="#{{ letter }}"
+                {% endif %}
+                class="{% if forloop.first %}is-selected{% endif %}"
+              >
+                {{- letter -}}
+              </a>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="brands-list">
+        {%- assign plaza_image = brands.plaza.image -%}
+        {%- for vendor in vendors -%}
+          {% paginate brands.values by 250 %}
+            {% for brand in brands.values %}
+              {% liquid
+                assign vendor_handle = vendor | handleize
+                assign brand_handle = brand.system.handle
+                assign brand_image = brand.image
+                assign brand_first_letter = vendor | slice: 0, 1
+              %}
+              {%- if vendor_handle == brand_handle -%}
+                <a
+                  href="/collections/{{ vendor_handle }}"
+                  class="row brands-item"
+                  data-letter="brand-letter-{{ brand_first_letter }}"
+                >
+                  <h2>
+                    {%- if brand_image != blank -%}
+                      {{
+                        brand_image
+                        | image_url: width: 1280
+                        | image_tag: class: 'is-hidden brands-list__image', srcset: null
+                      }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'is-hidden brands-list__image' }}
+                    {%- endif -%}
+                    <span class="columns small-12">{{ brand.name }}</span>
+                  </h2>
+                </a>
+              {%- endif -%}
+            {% endfor %}
+          {% endpaginate %}
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="brands-list__image-wrapper">
+      {%- if plaza_image != blank -%}
+        {{ plaza_image | image_url: width: 1280 | image_tag: class: 'brands-list__image', srcset: null }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'brands-list__image' }}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brands",
+  "tag": "section",
+  "class": "section-brands",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "disable_top_spacing",
+      "default": true,
+      "label": "Remove top spacing"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_bottom_spacing",
+      "default": true,
+      "label": "Remove bottom spacing"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brands"
+    }
+  ]
+}
+{% endschema %}

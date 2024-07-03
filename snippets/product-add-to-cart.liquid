@@ -1,0 +1,246 @@
+<div {{ block.shopify_attributes }}>
+  {%- if product != blank -%}
+    {%- liquid
+      assign gift_card_recipient_feature_active = false
+      if block.settings.show_gift_card_recipient and product.gift_card?
+        assign gift_card_recipient_feature_active = true
+      endif
+
+      assign show_dynamic_checkout = false
+      if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+        assign show_dynamic_checkout = true
+      endif
+
+      assign sub_category = product.metafields.custom.sub_category.value | reverse | reverse
+      if sub_category[0] == 'Øreringe' and product.metafields.custom.stk_par.value == 'Stk'
+        assign pair_single_selector = true
+      endif
+    -%}
+
+    <product-form
+      class="product-form"
+      data-section="{{ section.id }}"
+      data-hide-errors="{{ gift_card_recipient_feature_active }}"
+    >
+      <div class="product-form__error-message-wrapper form-notification error" role="alert" hidden>
+        {% render 'svg-icons' with 'thb-error' %}
+        <span class="product-form__error-message"></span>
+      </div>
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input type="hidden" name="items[0][id]" value="{{ product.selected_or_first_available_variant.id }}" disabled>
+        <input type="hidden" name="items[0][quantity]" value="1">
+
+        {%- if gift_card_recipient_feature_active -%}
+          {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+        {%- endif -%}
+        <div class="product-add-to-cart-container {% if pair_single_selector %}w_pair_single_selector{% endif %} d-flex">
+          <div class="form-notification error" style="display:none;"></div>
+          <div class="add_to_cart_holder" id="main-product-cart__holder">
+            {%- if block.settings.show_quantity_selector -%}
+              <div
+                id="quantity-{{ section.id }}"
+                {{ block.shopify_attributes }}
+              >
+                <quantity-selector class="quantity">
+                  <button
+                    class="minus"
+                    type="button"
+                    aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}"
+                  >
+                    {% render 'svg-icons' with 'minus' %}
+                  </button>
+                  <input
+                    type="number"
+                    id="Quantity-{{ section.id }}"
+                    name="quantity"
+                    class="qty"
+                    value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                      max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                    {% endif %}
+                    step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                    form="{{ product_form_id }}"
+                    aria-label="{{ 'products.product.quantity.input_label' | t: product: product.title | escape }}"
+                  >
+                  <button
+                    class="plus"
+                    type="button"
+                    aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}"
+                  >
+                    {% render 'svg-icons' with 'plus' %}
+                  </button>
+                </quantity-selector>
+              </div>
+            {%- endif -%}
+
+            {% if pair_single_selector %}
+              <div class="pair_single_selector__wrap">
+                <h4>{{ 'products.product.single_or_pair' | t }}</h4>
+                <div class="pair_single_selector__btn_wrap">
+                  <div data-quantity="1" class="button outline selected">
+                    <span>{{ 'products.product.single' | t }}</span>
+                  </div>
+                  <div data-quantity="2" class="button outline">
+                    <span>{{ 'products.product.pair' | t }}</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {% if  product.selected_or_first_available_variant.inventory_policy == 'continue' or product.selected_or_first_available_variant.inventory_quantity > 0 and product.selected_or_first_available_variant.inventory_policy == 'deny'  %}
+              <button
+                type="submit"
+                name="add"
+                id="AddToCart"
+                class="single-add-to-cart-button buy-button button outline {% unless product.selected_or_first_available_variant.available %}sold-out{% endunless %}"
+                {% if product.selected_or_first_available_variant.available == false and settings.klaviyo_back_in_stock_enabled == false %}
+                  disabled
+                {% endif %}
+              >
+              <span class="single-add-to-cart-button--text">
+                {% liquid
+                assign variant = product.selected_or_first_available_variant
+                    echo 'products.product.add_to_cart' | t
+                %}
+              </span>
+              <span class="loading-overlay">
+                {% render 'svg-icons' with 'thb-loading' %}
+              </span>
+            </button>
+
+
+
+            <button
+              type="submit"
+              {% unless settings.klaviyo_back_in_stock_enabled %}
+                disabled
+              {% endunless %}
+              class="button outline notify-me-btn d-none klaviyo-bis-trigger"
+            >
+            <span class="back-in-stock-button--text">
+              {% liquid
+                if settings.klaviyo_back_in_stock_enabled
+                  echo 'products.product.notify_me' | t
+                else
+                  echo 'products.product.sold_out' | t
+                endif
+              %}
+            </span>
+            <span class="loading-overlay">
+              {% render 'svg-icons' with 'thb-loading' %}
+            </span>
+            </button>
+
+
+          {% else %}
+              
+            <button
+              type="submit"
+              name="add"
+              id="AddToCart"
+              class="single-add-to-cart-button buy-button button outline d-none {% unless product.selected_or_first_available_variant.available %}sold-out{% endunless %}"
+              {% if product.selected_or_first_available_variant.available == false and settings.klaviyo_back_in_stock_enabled == false %}
+                disabled
+              {% endif %}
+            >
+            <span class="single-add-to-cart-button--text">
+              {% liquid
+                  assign variant = product.selected_or_first_available_variant
+                  echo 'products.product.add_to_cart' | t
+              %}
+            </span>
+            <span class="loading-overlay">
+              {% render 'svg-icons' with 'thb-loading' %}
+            </span>
+          </button>
+            <button
+              type="submit"
+              {% unless settings.klaviyo_back_in_stock_enabled %}
+                disabled
+              {% endunless %}
+              class="button outline notify-me-btn klaviyo-bis-trigger"
+            >
+            <span class="back-in-stock-button--text">
+              {% liquid
+                if settings.klaviyo_back_in_stock_enabled
+                  echo 'products.product.notify_me' | t
+                else
+                  echo 'products.product.sold_out' | t
+                endif
+              %}
+            </span>
+            <span class="loading-overlay">
+              {% render 'svg-icons' with 'thb-loading' %}
+            </span>
+            </button>
+          {% endif %}
+            {%- if show_dynamic_checkout -%}
+              {{ form | payment_button }}
+            {%- endif -%}
+            
+          </div>
+          <div class="add_to_cart_holder d-none">
+            <button type="button" name="add" id="notifyMe" class="single-add-to-cart-button button outline">
+              <span>
+                {{ 'products.product.notify_me' | t }}
+              </span>
+            </button>
+          </div>
+        </div>
+      {%- endform -%}
+    </product-form>
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="single_add_to_cart_button button sold-out"
+          disabled
+        >
+          <span class="single-add-to-cart-button--text">{{ 'products.product.sold_out' | t }}</span>
+        </button>
+      </div>
+    </div>    
+  {%- endif -%}
+              
+  {%- if product != blank -%}
+    {%- form 'product', product, id: 'product-form-installment', class: 'installment' -%}
+      <input type="hidden" name="items[0][id]" value="{{ product.selected_or_first_available_variant.id }}">
+      <input type="hidden" data-form-quantity name="items[0][quantity]" value="1">
+      {{ form | payment_terms }}
+    {%- endform -%}
+  {%- endif -%}
+</div>
+{%- if pickup -%}
+  {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+    | where: 'pick_up_enabled', true
+  -%}
+  <pickup-availability
+    class="pickup-availability-wrapper"
+    {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+      available
+    {% endif %}
+    data-root-url="{{ routes.root_url }}"
+    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+    data-has-only-default-variant="{{ product.has_only_default_variant }}"
+  >
+    {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+      | where: 'pick_up_enabled', true
+    -%}
+    {%- if pick_up_availabilities.size > 0 -%}
+      {% render 'product-pickup-availability', pick_up_availabilities: pick_up_availabilities %}
+    {% endif %}
+  </pickup-availability>
+  <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% if settings.klaviyo_back_in_stock_enabled %}
+  {% render 'product-back-in-stock' %}
+{% endif %}

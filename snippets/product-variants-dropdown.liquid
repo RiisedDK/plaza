@@ -1,0 +1,17 @@
+{% comment %}  
+  Accepts:
+    - variants: [Array] of product variants
+  Usage:
+    {% render "product-variants-dropdown", variants: _ %}
+{% endcomment %}
+
+<div class="product-variants-dropdown">
+  <form class="d-flex justify-content-space-between">
+    <select name="variants" id="variants" class="py-0 pr-2 mb-0">
+      {% for variant in variants %}
+        <option value="{{ variant.title }}" id="{{ variant.id }}">{{ variant.title }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="px-0 py-0"></button>
+  </form>
+</div>

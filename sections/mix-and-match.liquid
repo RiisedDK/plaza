@@ -1,0 +1,181 @@
+{%- liquid
+  assign main_product = section.settings.product | default: product
+  assign products_metafield = main_product.metafields.mix_match_section.products.value
+-%}
+{%- if products_metafield != blank -%}
+  {{ 'shop-the-look.css' | asset_url | stylesheet_tag }}
+  {%- liquid
+    assign section_width = section.settings.section_width
+    assign disable_top_spacing = section.settings.disable_top_spacing
+    assign disable_bottom_spacing = section.settings.disable_bottom_spacing
+
+    assign image_metafield = main_product.metafields.mix_match_section.background_image.value
+    assign image = image_metafield | default: section.settings.image
+    assign image_mobile = image_metafield | default: section.settings.image_mobile
+
+    assign title = section.settings.title
+    assign subtitle = section.settings.subtitle
+    assign button_label = section.settings.button_label
+    assign content_color = section.settings.content_color
+    assign button_label_color_on_hover = section.settings.button_label_color_on_hover
+
+    unless image_mobile
+      assign image_mobile = image
+    endunless
+  -%}
+  <div class="section-spacing{% if disable_top_spacing %} section-spacing--disable-top{% endif %}{% if disable_bottom_spacing %} section-spacing--disable-bottom{% endif %}">
+    <shop-the-look
+      data-mix-match
+      class="shop-the-look"
+    >
+      <div class="row {{ section_width }}">
+        <div class="small-12 columns shop-the-look--area">
+          <figure class="shop-the-look--area shop-the-look--mobile">
+            {%- if image_mobile -%}
+              {% liquid
+                assign master_width = image_mobile.src.width | append: 'x' | append: image_mobile.src.height
+                assign sizes = '750x' | append: ',' | append: master_width
+                render 'responsive-image', image: image_mobile, sizes: sizes, class: 'desktop-height-410 mobile-height-250'
+              %}
+            {%- else -%}
+              <div class="thb-placeholder">
+                {{ 'collection-1' | placeholder_svg_tag }}
+              </div>
+            {%- endif -%}
+          </figure>
+          <figure class="shop-the-look--area shop-the-look--desktop">
+            {%- if image -%}
+              {% assign master_width = image.src.width | append: 'x' | append: image.src.height %}
+              {% render 'responsive-image',
+                image: image,
+                sizes: master_width,
+                class: 'desktop-height-410 mobile-height-250'
+              %}
+            {%- else -%}
+              <div class="thb-placeholder">
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              </div>
+            {%- endif -%}
+          </figure>
+          <div
+            class="section-overlay columns"
+            style="--color-body: {{ content_color }}; --outline-button-label: {{ content_color }}; --solid-button-label: {{ button_label_color_on_hover }};"
+          >
+            <div class="section-overlay-content">
+              <h2 class="section-title">{{ title }}</h2>
+              <p class="section-subtitle">{{ subtitle }}</p>
+            </div>
+            <div class="section-overlay-button">
+              <button class="button outline mix-max-toggle">
+                <span>{{ button_label }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% render 'mix-match-drawer', products_metafield: products_metafield %}
+    </shop-the-look>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Mix & Match",
+  "class": "section-mix-match",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Learn more about how to set up the [shop the look section](https://documentation.fuelthemes.net/kb/how-to-set-up-shop-the-look-section-in-reformation/)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1680 x 700 px .jpg recommended."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "750 x 800 px .jpg recommended. Default image is used if none is selected. To position the hotspots precisely, switch to mobile mode."
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "full-width-row",
+          "label": "Full width"
+        },
+        {
+          "value": "full-width-row-full",
+          "label": "Full width, no spacing"
+        }
+      ],
+      "default": "grid",
+      "label": "Section width"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select a product for other templates than product page or to override the product page product."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Get inspire"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Shop the look"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop the look"
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Content color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_label_color_on_hover",
+      "label": "Button label color on hover",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_top_spacing",
+      "default": false,
+      "label": "Remove top spacing"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_bottom_spacing",
+      "default": false,
+      "label": "Remove bottom spacing"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mix & Match"
+    }
+  ]
+}
+{% endschema %}

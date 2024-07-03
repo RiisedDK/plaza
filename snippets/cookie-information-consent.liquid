@@ -1,0 +1,44 @@
+{% comment %} Adding CookieInformation script {% endcomment %}
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    window.Shopify.loadFeatures(
+      [
+        {
+          name: 'consent-tracking-api',
+          version: '0.1',
+        },
+      ],
+      (error) => {
+        if (error) {
+          throw error;
+        }
+
+        const cookieScript = document.createElement('script');
+        cookieScript.setAttribute('src', 'https://policy.app.cookieinformation.com/uc.js');
+        cookieScript.setAttribute('data-culture', window.requestLocale || 'en');
+        cookieScript.id = 'CookieConsent';
+        document.head.appendChild(cookieScript);
+
+        window.addEventListener(
+          'CookieInformationConsentGiven',
+          function (event) {
+            if (
+              CookieInformation.getConsentGivenFor('cookie_cat_statistic') &&
+              CookieInformation.getConsentGivenFor('cookie_cat_marketing')
+            ) {
+              window.Shopify.customerPrivacy.setTrackingConsent(true, function (e) {
+                console.log('Set Tracking Consent', true);
+              });
+            } else {
+              window.Shopify.customerPrivacy.setTrackingConsent(false, function (e) {
+                console.log('Set Tracking Consent', false);
+              });
+            }
+          },
+          false
+        );
+      }
+    );
+  });
+</script>

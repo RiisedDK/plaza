@@ -1,0 +1,19 @@
+{%- if products_metafield != blank -%}
+  <div class="side-panel mix-match-drawer" tabindex="-1" id="Mix-Match-Drawer">
+    <div class="side-panel-inner">
+      <div class="side-panel-header">
+        <div>
+          <h4 class="body-font">{{ 'general.mix_match_drawer.title' | t }}</h4>
+          <side-panel-close class="side-panel-close">{%- render 'svg-icons' with 'close' -%}</side-panel-close>
+        </div>
+      </div>
+      <div class="side-panel-content">
+        <div class="side-panel-content-grid">
+          {%- for product_metafield in products_metafield -%}
+            {% render 'product-card', product_card_product: product_metafield %}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}

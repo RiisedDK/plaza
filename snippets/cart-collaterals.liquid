@@ -1,0 +1,190 @@
+{% comment %}  
+  Accepts:
+    - is_main_cart [Boolean]: Whether is shown in the main cart or not.
+  Usage:
+    {% render 'cart-collaterals' with is_main_cart: _ %}
+{% endcomment %}
+
+{% liquid
+  if is_main_cart
+    assign scale_point_checkbox_class = 'main-cart-scale-point'
+    assign scale_point_label_class = 'scale-point-main-cart'
+
+    assign personal_card_checkbox = 'main-cart-personal-card'
+    assign personal_card_label_class = 'personal-card-main-cart'
+  else
+    assign scale_point_checkbox_class = 'side-panel-scale-point'
+    assign scale_point_label_class = 'scale-point'
+
+    assign personal_card_checkbox = 'side-panel-personal-card'
+    assign personal_card_label_class = 'personal-card'
+  endif
+%}
+
+{% if settings.scale_point_checkbox %}
+  <div class="{{ scale_point_checkbox_class }} d-flex">
+    <label for="{{ scale_point_label_class }}" class="scale-point-checker{% if is_main_cart %} main-cart{% endif %} d-flex">
+      <input type="checkbox" id="{{ scale_point_label_class }}">
+      <div class="check-wrapper{% if is_main_cart %} main-cart{% endif %}">
+        <svg
+          class="empty"
+          width="15"
+          height="15"
+          viewBox="0 0 15 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="0.375" y="0.375" width="14.25" height="14.25" fill="white" stroke="black" stroke-width="0.75"/>
+        </svg>
+        <svg
+          class="checked"
+          width="15"
+          height="15"
+          viewBox="0 0 15 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="0.5" y="0.5" width="14" height="14" fill="black" stroke="black"/>
+          <path transform="translate(2.3, 1.5)" d="M1 5.5L5 9.5L11 0.5" stroke="white"/>
+        </svg>
+      </div>
+      <div class="text-wrapper{% if is_main_cart %} main-cart{% endif %}">
+        {{ 'general.cart_drawer.scale_point' | t }}
+      </div>
+      <div class="scale-point-info{% if is_main_cart %} main-cart{% endif %} d-none">
+        <svg
+          class="d-block"
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+        >
+          <path d="M6.41669 4.08342H7.58335V5.25008H6.41669V4.08342ZM6.41669 6.41675H7.58335V9.91675H6.41669V6.41675ZM7.00002 1.16675C3.78002 1.16675 1.16669 3.78008 1.16669 7.00008C1.16669 10.2201 3.78002 12.8334 7.00002 12.8334C10.22 12.8334 12.8334 10.2201 12.8334 7.00008C12.8334 3.78008 10.22 1.16675 7.00002 1.16675ZM7.00002 11.6667C4.42752 11.6667 2.33335 9.57258 2.33335 7.00008C2.33335 4.42758 4.42752 2.33341 7.00002 2.33341C9.57252 2.33341 11.6667 4.42758 11.6667 7.00008C11.6667 9.57258 9.57252 11.6667 7.00002 11.6667Z" fill="black"/>
+        </svg>
+        {% if settings.scale_point_info_text != blank %}
+          <span class="scale-point-info-text">
+            {{ settings.scale_point_info_text }}
+          </span>
+        {% endif %}
+      </div>
+      <input
+        type="text"
+        class="scale-point-text-area{% if is_main_cart %} main-cart{% endif %} d-none first-input-mt"
+        form="cart-drawer-form"
+        placeholder="{{ 'general.cart_drawer.scale_point_textbox' | t }}"
+        name="attributes[scalepoint]"
+        required
+      >
+    </label>
+  </div>
+{% endif %}
+
+<div class="side-panel-gift-wrap d-flex align-items-center">
+  <label class="gift-wrap-checker d-flex"> 
+  {% for attribute in cart.attributes %}
+    {% assign key = attribute | first %}
+    {% assign value = attribute | last %}
+    {% if key == "Gift wrap"%}
+      {% if value == "true" or value == true %}
+        {% assign giftwrap_checked = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+    <input type="checkbox" giftwrap-variant="{{settings.cart_drawer_giftwrap_product.selected_or_first_available_variant.id}}" form="cart-drawer-form" gift-wrap="{{gift_wrap}}" {% if giftwrap_checked %} checked {% endif %} value="Yes">
+    <div class="check-wrapper">
+      <svg class="empty" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.375" y="0.375" width="14.25" height="14.25" fill="white" stroke="black" stroke-width="0.75"/>
+      </svg>
+      <svg class="checked" width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="14" height="14" fill="black" stroke="black"/>
+        <path transform="translate(2.3, 1.5)" d="M1 5.5L5 9.5L11 0.5" stroke="white"/>
+      </svg>
+    </div>
+    <div class="text-wrapper">
+      {{ 'general.cart_drawer.gift_wrap' | t }}
+    </div>
+    {% if settings.cart_drawer_giftwrap_info != blank %}
+      <div class="scale-point-info">
+        <svg
+        class="d-block"
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        >
+        <path d="M6.41669 4.08342H7.58335V5.25008H6.41669V4.08342ZM6.41669 6.41675H7.58335V9.91675H6.41669V6.41675ZM7.00002 1.16675C3.78002 1.16675 1.16669 3.78008 1.16669 7.00008C1.16669 10.2201 3.78002 12.8334 7.00002 12.8334C10.22 12.8334 12.8334 10.2201 12.8334 7.00008C12.8334 3.78008 10.22 1.16675 7.00002 1.16675ZM7.00002 11.6667C4.42752 11.6667 2.33335 9.57258 2.33335 7.00008C2.33335 4.42758 4.42752 2.33341 7.00002 2.33341C9.57252 2.33341 11.6667 4.42758 11.6667 7.00008C11.6667 9.57258 9.57252 11.6667 7.00002 11.6667Z" fill="black"/>
+        </svg>
+        <span class="scale-point-info-text">
+        {{ settings.cart_drawer_giftwrap_info }}
+        </span>
+      </div>
+      {% endif %}
+  </label>
+  <div class="gift-wrap-price d-block">
+    {{settings.cart_drawer_giftwrap_product.selected_or_first_available_variant.price | money }}
+  </div>
+</div>
+
+{% if settings.personal_card_checkbox %}
+  <div class="{{ personal_card_checkbox }} d-flex">
+    <label for="{{ personal_card_label_class }}" class="personal-card-checker d-flex{% if is_main_cart %} main-cart{% endif %}">
+      <input type="checkbox" id="{{ personal_card_label_class }}">
+      <div class="check-wrapper{% if is_main_cart %} main-cart{% endif %}">
+        <svg
+          class="empty"
+          width="15"
+          height="15"
+          viewBox="0 0 15 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="0.375" y="0.375" width="14.25" height="14.25" fill="white" stroke="black" stroke-width="0.75"/>
+        </svg>
+        <svg
+          class="checked"
+          width="15"
+          height="15"
+          viewBox="0 0 15 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="0.5" y="0.5" width="14" height="14" fill="black" stroke="black"/>
+          <path transform="translate(2.3, 1.5)" d="M1 5.5L5 9.5L11 0.5" stroke="white"/>
+        </svg>
+      </div>
+      <div class="text-wrapper{% if is_main_cart %} main-cart{% endif %}">
+        {{ 'general.cart_drawer.personal_card' | t }}
+      </div>
+      <div class="personal-card-for-free d-block{% if is_main_cart %} main-cart{% endif %}">
+        {{ 'general.cart_drawer.for_free' | t }}
+      </div>
+
+      <input
+        type="text"
+        class="personal-card-text-area d-none first-input-mt{% if is_main_cart %} main-cart{% endif %}"
+        form="cart-drawer-form"
+        placeholder="{{ 'general.cart_drawer.to' | t }}"
+        name="attributes[personal_card_to]"
+        required
+      >
+      <input
+        type="text"
+        class="personal-card-text-area d-none{% if is_main_cart %} main-cart{% endif %}"
+        form="cart-drawer-form"
+        placeholder="{{ 'general.cart_drawer.from' | t }}"
+        name="attributes[personal_card_from]"
+        required
+      >
+      <textarea
+        rows="3"
+        class="personal-card-text-area d-none{% if is_main_cart %} main-cart{% endif %}"
+        form="cart-drawer-form"
+        placeholder="{{ 'general.cart_drawer.message' | t }}"
+        name="attributes[personal_card_message]"
+        required
+      ></textarea>
+    </label>
+  </div>
+{% endif %}

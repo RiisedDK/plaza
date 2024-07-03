@@ -1,0 +1,84 @@
+{%- if product != blank -%}
+  {% liquid
+    assign bundle_product = product.metafields.bundle.product.value
+    assign bundle_image = bundle_product.metafields.bundle.image.value
+
+    assign section_width = section.settings.section_width
+    assign disable_top_spacing = section.settings.disable_top_spacing
+    assign disable_bottom_spacing = section.settings.disable_bottom_spacing
+  %}
+
+  {%- if bundle_product != blank -%}
+    <div class="row {{ section_width }}">
+      <div class="small-12 columns">
+        <div class="product-grid-container section-spacing{% if disable_top_spacing %} section-spacing--disable-top{% endif %}{% if disable_bottom_spacing %} section-spacing--disable-bottom{% endif %}">
+          <div class="position-relative d-none d-lg-block">
+            {% liquid
+              assign master_width = bundle_image.src.width | append: 'x' | append: bundle_image.src.height
+              assign sizes = '500x' | append: ',' | append: master_width
+              render 'responsive-image', image: bundle_image, sizes: sizes, class: 'auto-height-image'
+            %}
+          </div>
+          <div>
+            <p class="text-size-small mb-1">
+              {{ 'sections.buy_as_bundle.title' | t }}
+            </p>
+            <h3 class="heading">
+              {{ 'sections.buy_as_bundle.subtitle' | t }}
+            </h3>
+            <div class="columns">
+              {% render 'product-card', product_card_product: bundle_product %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Buy as bundle",
+  "class": "section-buy-as-bundle",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "section_width",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "full-width-row",
+          "label": "Full width"
+        },
+        {
+          "value": "full-width-row-full",
+          "label": "Full width, no spacing"
+        }
+      ],
+      "default": "full-width-row",
+      "label": "Section width"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_top_spacing",
+      "default": false,
+      "label": "Remove top spacing"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_bottom_spacing",
+      "default": false,
+      "label": "Remove bottom spacing"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buy as bundle"
+    }
+  ]
+}
+{% endschema %}

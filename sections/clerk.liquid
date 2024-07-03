@@ -1,0 +1,25 @@
+{% if settings.clerk_key %}
+  {{section.settings.clerk_type}}
+{% endif %}
+  
+{% schema %}
+{
+  "name": "clerk",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "clerk_type",
+      "info": "Get code to embed from the section 'Insert Into Website' of the clerk recommendation content you want to insert",
+      "default": "<span class='clerk' data-template='@index-page-recommendations'></span>",
+      "label": "Clerk Snippet"
+    }
+  ],
+  "presets": [
+    {
+      "name": "clerk"
+    }
+  ]
+}
+{% endschema %}

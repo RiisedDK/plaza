@@ -1,0 +1,88 @@
+{% comment %}  
+Accepts:
+  - product: The product object
+  - section: The section object
+  - block: The block object
+
+Usage:
+  {% render 'store-availability', product: product, section: section, block: block %}
+{% endcomment %}
+{% liquid
+  assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities | where: "available" | where: "pick_up_enabled"
+  assign closest_location = pick_up_availabilities.first
+  assign current_variant = product.selected_or_first_available_variant
+  assign bundle_products = product.metafields.custom.bundle_products
+%}
+
+<div id="inventory-{{ section.id }}" class="product-inventory-notice--wrapper" {{ block.shopify_attributes }}>
+  {% if current_variant != blank %}
+    <div
+      class="store-availability"
+      data-bundle-product = "{% if bundle_products != blank %}true{% else %}false{% endif %}"
+      data-bundle-product-ids = "{% for product in bundle_products.value %}{% if forloop.index > 1 %},{% endif %}{{product.id}}{% endfor %}"  
+      data-bundle-product-variant-ids = "{% for product in bundle_products.value %}{% if forloop.index > 1 %},{% endif %}{{product.selected_or_first_available_variant.id}}{% endfor %}"
+      data-locales-no-pickup = "{{ 'products.product.store_availability.no_pickup' | t }}"
+      data-locales-online-exclusive="{{ 'products.product.store_availability.online_exclusive' | t }}"
+      data-inventory-notice-pulse = "{{ block.settings.inventory_notice_pulse }}"
+      data-inventory-notice-threshold = "{{ block.settings.inventory_notice_threshold }}"
+      data-show-inventory-notice = "{{ block.settings.show_inventory_notice }}"
+    >
+      <div class="in-stores">
+        <div class="product-inventory-notice pp d-inline-block">
+          {%- if block.settings.inventory_notice_pulse -%}<div class="product-inventory-notice--pulse mt-0"></div>{%- endif %}
+        </div>
+        <span class="">
+          {{ 'products.product.store_availability.available_in' | t }}
+          <span class='open-side-panel' open-side-panel><span class="pickup-availabilities-size"></span>
+            {{ 'products.product.store_availability.stores' | t }}</span>.
+        </span>
+        <span>{{ closest_location.pick_up_time }}</span>
+      </div>
+
+      <div class="online-exclusive d-none">
+        <div class="product-inventory-notice d-inline-block">
+          <div class="product-inventory-notice--pulse mt-0"></div>
+        </div>
+        <span class="content">{{ 'products.product.store_availability.online_exclusive' | t }}</span>
+      </div>
+
+      <div class="side-panel-wrapper-template">
+        <div class="side-panel px-5 py-3">
+          <div class="side-panel__header d-flex justify-content-space-between mb-2">
+            <div class="title">{{ 'products.product.store_availability.header' | t }}</div>
+            <div class="close-side-panel position-relative" close-side-panel>
+              <div class="bar left position-absolute"></div>
+              <div class="bar right position-absolute"></div>
+            </div>
+          </div>
+          <div class="side-panel__description mb-2">{{ 'products.product.store_availability.description' | t }}</div>
+          <div enable-location class="side-panel__enable-location">{{ 'products.product.store_availability.enable_location' | t }}</div>
+          <div class="pickup-locations"></div>
+        </div>
+        <div class="side-panel-background" close-side-panel></div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<template class="pickup">
+  <div class="pickup-location py-2">
+    <div class="pickup-location__header mb-1">
+      <div class="pickup-location__title">
+        <div class="product-inventory-notice d-inline-block">
+          <div class="product-inventory-notice--pulse mt-0"></div>
+        </div>
+        <span class="location-name"></span>
+        <span class="pickup-location__distance"></span>
+      </div>
+      <span><span class="pickup-location__items"></span> {{ 'products.product.store_availability.stk_available' | t }}<span></span>
+    </div>
+    <div class="pickup-location__body">
+      <div class="pickup-location__address">
+        <span class="address1"></span>,
+        <span class="zip"></span>
+        <span class="city"></span>
+      </div>
+    </div>
+  </div>
+</template>
