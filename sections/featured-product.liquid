@@ -170,9 +170,9 @@
 
 {%- if section.settings.lightbox != blank -%}
 {% render 'photoswipe' %}
-<link rel="stylesheet" href="{{ 'photoswipe.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" data-href="{{ 'photoswipe.css' | asset_url }}">
 {%- endif -%}
-<script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
+<script type="lazyload_js" data-src="{{ 'product.js' | asset_url }}"></script>
 
 {%- if first_3d_model -%}
   <script type="application/json" id="ProductJSON-{{ product.id }}">

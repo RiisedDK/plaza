@@ -1,8 +1,8 @@
 {%- assign collapsible_tabs = section.blocks | where: "type", "collapsible_tab" -%}
 {%- if collapsible_tabs -%}
-{{- 'collapsible-content.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'collapsible-content.css' | asset_url -}}" />
 {%- endif -%}
-{{- 'image-with-text.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'image-with-text.css' | asset_url -}}" />
 {%- liquid
 	assign section_width = section.settings.section_width
 	assign image = section.settings.image

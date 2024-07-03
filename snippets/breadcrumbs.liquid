@@ -1,4 +1,4 @@
-{{ 'breadcrumbs.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" data-href="{{- 'breadcrumbs.css' | asset_url -}}" />
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <a href="{{ routes.root_url }}">{{ 'sections.breadcrumbs.home' | t }}</a>
   {% if collection.url %}

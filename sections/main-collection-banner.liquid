@@ -30,7 +30,8 @@
     {% endif %}
   {%- endcapture -%}
 {%- endif -%}
-{{ 'collection-banner.css' | asset_url | stylesheet_tag }}
+
+<link rel="stylesheet" data-href="{{ 'collection-banner.css' | asset_url }}" />
 
 <div class="collection-banner collection-banner--heading-uppercase-{{ make_heading_uppercase }}{% if show_collection_image and image %} collection-banner--has-bg{% endif %}" style="--overlay-color-rgb: {{ overlay_color | color_extract: 'red' }}, {{ overlay_color | color_extract: 'green' }}, {{ overlay_color | color_extract: 'blue' }}; --overlay-opacity: {{ overlay_opacity | divided_by: 100.0 }}">
   <div class="row full-width-row">

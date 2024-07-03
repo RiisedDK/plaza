@@ -1,4 +1,4 @@
-{{ 'list-collections.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" data-href="{{- 'list-collections.css' | asset_url -}}" />
 {% liquid
 	assign section_heading = section.settings.heading
 	assign section_heading_left = section.settings.heading_left

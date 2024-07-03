@@ -1,4 +1,4 @@
-{{ 'text-with-icons.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" data-href="{{ 'text-with-icons.css' | asset_url }}" />
 {%- liquid
 	assign mobile_swipe = section.settings.mobile_swipe
 	assign text_alignment = section.settings.text_alignment

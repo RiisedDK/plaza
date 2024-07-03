@@ -1,7 +1,5 @@
-<link rel="preload" as="style" href="{{ 'app.css' | asset_url }}">
 {% if template contains 'product' -%}
-<link rel="preload" as="style" href="{{ 'product.css' | asset_url }}">
-<link rel="preload" as="style" href="{{ 'labels.css' | asset_url }}">
+
 {% liquid
 	if product.selected_or_first_available_variant.featured_media.preview_image
 		assign image = product.selected_or_first_available_variant.featured_media.preview_image
@@ -20,12 +18,15 @@
 	endif
 -%}
 {%- endif %}
+
+{% comment %}
 {% if settings.animations %}
 {{ 'animations.min.js' | asset_url | preload_tag: as: 'script' }}
 {% endif %}
 {{ 'vendor.min.js' | asset_url | preload_tag: as: 'script' }}
 {{ 'app.js' | asset_url | preload_tag: as: 'script' }}
 {{ 'slideshow.js' | asset_url | preload_tag: as: 'script' }}
+{% endcomment %}
 
 <script>
 window.lazySizesConfig = window.lazySizesConfig || {};

@@ -1,4 +1,4 @@
-{{- 'gallery.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'gallery.css' | asset_url -}}" />
 {%- liquid
 	assign columns_desktop = section.settings.columns_desktop
 	assign section_width = section.settings.section_width
@@ -34,7 +34,7 @@
 										assign sizes = sizes | append: ',1125x0'
 									endunless
 								-%}
-								{%- render 'responsive-image', image: block.settings.image, sizes: sizes -%}
+								{%- render 'responsive-image-gallery', image: block.settings.image, sizes: sizes -%}
 							{%- else -%}
 								{{ 'image' | placeholder_svg_tag: 'placeholder_svg_tag' }}
 							{%- endif -%}

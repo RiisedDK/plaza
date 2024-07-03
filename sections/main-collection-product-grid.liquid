@@ -1,5 +1,5 @@
-{{- 'facets.css' | asset_url | stylesheet_tag -}}
-{{- 'product-grid.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'facets.css' | asset_url -}}" />
+<link rel="stylesheet" data-href="{{- 'product-grid.css' | asset_url -}}" />
 {%- liquid
 	assign full_width = section.settings.full_width
 	assign enable_filtering = section.settings.enable_filtering
@@ -61,7 +61,7 @@
 												endif
 											-%}
 											{%- if display_promotion -%}
-												{{- 'gallery.css' | asset_url | stylesheet_tag -}}
+												<link rel="stylesheet" data-href="{{- 'gallery.css' | asset_url -}}" />
 												<li class="promotion-column column promotion-column-width--{{ block.settings.promotion_width }} product-columns-{{ columns_desktop }}">
 													{%- render 'product-promotion', block: block -%}
 												</li>
@@ -83,9 +83,9 @@
 </div>
 {%- if enable_filtering or enable_sorting -%}
 {%- if enable_filtering -%}
-{{ 'nouislider.js' | asset_url | script_tag }}
+<script type="lazyload_js" data-src="{{ 'nouislider.js' | asset_url }}"></script>
 {%- endif -%}
-<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+<script type="lazyload_js" data-src="{{ 'facets.js' | asset_url }}"></script>
 {%- endif -%}
 
 {% schema %}

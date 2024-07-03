@@ -7,8 +7,10 @@
 	    ltr
 	{%- endcase -%}
 {%- endcapture -%}
+
 <html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ dir }}">
   <head>
+    {% render 'header_file' %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
@@ -18,14 +20,13 @@
 
     {% render 'head-preload' %}
     {% render 'en-redirect' %}
-
     {% render 'third-party-scripts' %}
 
     {% if settings.favicon != blank -%}
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif %}
 
-    {{ 'parcel_style.css' | asset_url | stylesheet_tag: preload: true }}
+    <link rel="stylesheet" data-href="{{ 'parcel_style.css' | asset_url }}" />
 
     <title>
       {{ page_title }}
@@ -46,7 +47,7 @@
 
     {% render 'social-meta-tags' %}
 
-    {{ 'app.css' | asset_url | stylesheet_tag }}
+    <link rel="stylesheet" data-href="{{ 'app.css' | asset_url }}" />
 
     {% render 'head-variables' %}
 
@@ -78,25 +79,42 @@
       };
       window.requestLocale = '{{ request.locale.iso_code }}';
     </script>
-    {{ content_for_header }}
+    
+    {%- if request.design_mode or template contains 'cart' or template contains 'checkout' -%}
+            {{ content_for_header }}
+    {%- else -%}
+            {% capture content_for_header2 %}{{ content_for_header }}{% endcapture %}
+            {{ content_for_header2 | replace: ' defer="defer" ', ' type="lazyload_js" ' | replace: " src=", " data-src="| replace: "DOMContentLoaded", "appco-DOMContentLoaded" | replace: "window.addEventListener('load', asyncLoad, false);", "window.addEventListener('appco-DOMContentLoaded', asyncLoad, false);" | replace: "addEventListener('load', prefetchAssets);", "addEventListener('appco-DOMContentLoaded', prefetchAssets);" }}
+            <script>var trekkie=[];trekkie.integrations=!0;window.BOOMR={},window.BOOMR.version=true;</script>
+    {%- endif -%}
+    
     <!-- Header hook for plugins -->
     {% render 'clerk_script' %}
+    
     <script>
       document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
     </script>
 
-    <!-- Ønskeknap start -->
+  <!-- Ønskeknap start -->
     <script type="application/javascript" src="https://storage.googleapis.com/gowish-button-prod/js/gowish-iframe.js" data-region="denmark" id="gowish-iframescript" defer></script>
     <link rel="stylesheet" href="https://storage.googleapis.com/gowish-button-prod/css/gowish-iframe.css">
   <!-- Ønskeknap end -->
+
+  {% render "theme-css" %}
+  {% render "theme-css2" %}
+    
+  {% render 'custom-css' %}  
+  {% render 'app-block' %}  
   </head>
   <body class="animations-{{ settings.animations }} button-uppercase-{{ settings.button_uppercase }} navigation-uppercase-{{ settings.navigation_uppercase }} product-title-uppercase-{{ settings.product_title_uppercase }}{% if customer %} customer-logged-in{% endif %} template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }} template-{{ template | replace: '.', '-' | handle }}">
     <a class="screen-reader-shortcut" href="#main-content">{{ 'accessibility.skip_to_text' | t }}</a>
     <div id="wrapper">
       {% sections 'header-group' %}
+      
       <div role="main" id="main-content">
         {{ content_for_layout }}
       </div>
+      
       {% liquid
         sections 'footer-group'
         render 'cart-drawer'
@@ -106,10 +124,11 @@
       <div class="click-capture"></div>
     </div>
 
-    {{ 'vendor.min.js' | asset_url | script_tag }}
+    <script type="lazyload_js" data-src="{{ 'vendor.min.js' | asset_url }}"></script>
+    
     {% if settings.animations %}
-      {{ 'animations.min.js' | asset_url | script_tag }}
-      <script>
+      <script type="lazyload_js" data-src="{{ 'animations.min.js' | asset_url }}"></script>  
+      <script type="lazyload_js">
         gsap.defaults({
           ease: Power4.easeOut,
         });
@@ -119,90 +138,119 @@
         gsap.registerPlugin(ScrollTrigger);
       </script>
     {% endif %}
+    
     {% if settings.enable_quick_view %}
-      {{ 'product.js' | asset_url | script_tag }}
+      <script type="lazyload_js" data-src="{{ 'product.js' | asset_url }}"></script>
     {% endif %}
-    {{ 'slideshow.js' | asset_url | script_tag }}
-    {{ 'app.js' | asset_url | script_tag }}
-    <script type="module" src="{{ 'scroll-shadow.js' | asset_url }}" defer="defer"></script>
-    <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+
+    <script type="lazyload_js" data-src="{{ 'slideshow.js' | asset_url }}"></script>
+    <script type="lazyload_js" data-src="{{ 'app.js' | asset_url }}"></script>
+      
+    <script data-appco-type="module" type="lazyload_js" data-src="{{ 'scroll-shadow.js' | asset_url }}"></script>
+    <script type="lazyload_js" data-src="{{ 'predictive-search.js' | asset_url }}"></script>
+    
     {%- if request.design_mode -%}
       {{ 'theme-editor.js' | asset_url | script_tag }}
     {%- endif -%}
+    
     {%- if settings.cart_recommendations -%}
       <script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
+    
     {% render 'back-to-top' %}
 
-    {{ 'parcel_scripts.js' | asset_url | script_tag }}
-    <script src="https://partnertrackshopify.dk/js/register.js" async></script>
-{% if product %}
-    <script>
-window.addEventListener('load', function() {
-var _learnq = window._learnq || [];
-function addedToCart() {
-  fetch(`${window.location.origin}/cart.js`)
-  .then(res => res.clone().json().then(data => {
-    var cart = {
-      total_price: data.total_price/100,
-      $value: data.total_price/100,
-      total_discount: data.total_discount,
-      original_total_price: data.original_total_price/100,
-      items: data.items
-    }
-    if (item !== 'undefined') {
-      cart = Object.assign(cart, item)
-    }
-    if (klAjax) {
-        _learnq.push(['track', 'Added to Cart', cart]);
-        klAjax = false;
-      }
-  }))
-};
-(function (ns, fetch) {
-  ns.fetch = function() {
-    const response = fetch.apply(this, arguments);
-    response.then(res => {
-      if (`${window.location.origin}/cart/add.js`
-      	.includes(res.url)) {
-        	addedToCart()
-      }
-    });
-    return response
-  }
-}(window, window.fetch));
-var klAjax = true;
-var atcButtons = document.querySelectorAll("form[action*='/cart/add'] button[type='submit']");
-for (var i = 0; i < atcButtons.length; i++) {
-    atcButtons[i].addEventListener("click", function() {
-      if (klAjax) {
-        _learnq.push(['track', 'Added to Cart', item]);
-        klAjax = false;
-      }
-    })
-}
-});
-</script>
+    <script type="lazyload_js" data-src="{{ 'parcel_scripts.js' | asset_url }}"></script>
+    <script type="lazyload_js" data-src="https://partnertrackshopify.dk/js/register.js"></script>
+    {% if product %}
+        <script type="lazyload_js">
+            window.addEventListener('load', function() {
+            var _learnq = window._learnq || [];
+            function addedToCart() {
+              fetch(`${window.location.origin}/cart.js`)
+              .then(res => res.clone().json().then(data => {
+                var cart = {
+                  total_price: data.total_price/100,
+                  $value: data.total_price/100,
+                  total_discount: data.total_discount,
+                  original_total_price: data.original_total_price/100,
+                  items: data.items
+                }
+                if (item !== 'undefined') {
+                  cart = Object.assign(cart, item)
+                }
+                if (klAjax) {
+                    _learnq.push(['track', 'Added to Cart', cart]);
+                    klAjax = false;
+                  }
+              }))
+            };
+            (function (ns, fetch) {
+              ns.fetch = function() {
+                const response = fetch.apply(this, arguments);
+                response.then(res => {
+                  if (`${window.location.origin}/cart/add.js`
+                  	.includes(res.url)) {
+                    	addedToCart()
+                  }
+                });
+                return response
+              }
+            }(window, window.fetch));
+            var klAjax = true;
+            var atcButtons = document.querySelectorAll("form[action*='/cart/add'] button[type='submit']");
+            for (var i = 0; i < atcButtons.length; i++) {
+                atcButtons[i].addEventListener("click", function() {
+                  if (klAjax) {
+                    _learnq.push(['track', 'Added to Cart', item]);
+                    klAjax = false;
+                  }
+                })
+            }
+            });
+        </script>
     {% endif %}
 
-  <!-- samita custom -->
-  <script>
-  window.Samita = window.Samita || {}
-  Samita.ProductLabels = Samita.ProductLabels || {}
-  Samita.ProductLabels.overrideOptions = Samita.ProductLabels.overrideOptions || {}
-  Samita.ProductLabels.overrideOptions.selectors = Samita.ProductLabels.overrideOptions.selectors || {}
-  Samita.ProductLabels.overrideOptions.selectors.product = {
-    elementSelectors: [".thb-product-detail.product"],
-    imageSelectors: [".product-single__media-image img",".product-featured-image img",".clerk-img-cont img"],
-    formSelectors: ['[data-type="add-to-cart-form]']
-  }
-  </script>
-  <style>
-    .samita_productLabel-content {
-      z-index: 20 !important;
+    <!-- samita custom -->
+    <script>
+    window.Samita = window.Samita || {}
+    Samita.ProductLabels = Samita.ProductLabels || {}
+    Samita.ProductLabels.overrideOptions = Samita.ProductLabels.overrideOptions || {}
+    Samita.ProductLabels.overrideOptions.selectors = Samita.ProductLabels.overrideOptions.selectors || {}
+    Samita.ProductLabels.overrideOptions.selectors.product = {
+      elementSelectors: [".thb-product-detail.product"],
+      imageSelectors: [".product-single__media-image img",".product-featured-image img",".clerk-img-cont img"],
+      formSelectors: ['[data-type="add-to-cart-form]']
     }
-  </style>
-  <!-- samita custom -->
+    </script>
     
+    <style>
+      .samita_productLabel-content {
+        z-index: 20 !important;
+      }
+
+      .product-card-info a,
+      .product-card-info span{
+          color: #686868 !important;
+      } 
+    </style>
+    
+    <!-- samita custom -->
+
+    <script type="lazyload_js" data-src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+          	var site_nav_link_burger = true;
+          	document.addEventListener("DOMContentLoaded", function() {
+                var icon_menu = document.querySelector(".mobile-toggle-wrapper .mobile-toggle");
+                icon_menu.addEventListener("click", function() {
+          			if(site_nav_link_burger) {
+          				event.preventDefault();
+          				site_nav_link_burger = false;
+          			}
+          		});
+          	})
+    </script>
+    
+    {% render 'footer_file' %} 
+    {% render 'footer-app-block' %}  
   </body>
 </html>

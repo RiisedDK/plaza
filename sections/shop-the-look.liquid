@@ -1,5 +1,5 @@
 {{ 'shop-the-look.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
+<script type="lazyload_js" data-src="{{ 'product.js' | asset_url }}"></script>
 {%- liquid
 	assign image = section.settings.image
 	assign image_mobile = section.settings.image_mobile

@@ -71,8 +71,8 @@
   </div>
 </div>
 
-<link rel="stylesheet" href="{{ 'product-grid.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" data-href="{{ 'product-grid.css' | asset_url }}">
+<link rel="stylesheet" data-href="{{ 'predictive-search.css' | asset_url }}">
 <noscript>
   {{ 'product-grid.css' | asset_url | stylesheet_tag }}
   {{ 'predictive-search.css' | asset_url | stylesheet_tag }}

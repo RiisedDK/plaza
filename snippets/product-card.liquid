@@ -36,13 +36,13 @@
 				if products_hover_images and product_card_product.images.size > 1
 					for i in (1..products_hover_images_count)
 						if product_card_product.images[i]
-							render 'responsive-image', class: 'product-secondary-image', image: product_card_product.images[i], sizes: sizes
+							render 'responsive-image-card', class: 'product-secondary-image', image: product_card_product.images[i], sizes: sizes
 						endif
 					endfor
 				endif
 			%}
 			{%- if featured_media -%}
-      	{%- render 'responsive-image', class: 'product-primary-image', image: featured_media, sizes: sizes -%}
+      	{%- render 'responsive-image-card', class: 'product-primary-image', image: featured_media, sizes: sizes -%}
 			{%- else -%}
 				<div class="thb-placeholder">
 					{{ 'product-1' | placeholder_svg_tag }}

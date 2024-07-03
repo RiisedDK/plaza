@@ -1,4 +1,4 @@
-{{ 'spacer.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" data-href="{{ 'spacer.css' | asset_url }}" />
 {%- liquid
 	assign spacer_mobile = section.settings.spacer_mobile
 	assign spacer_desktop = section.settings.spacer_desktop

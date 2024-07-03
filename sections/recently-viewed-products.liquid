@@ -1,4 +1,4 @@
-{{- 'product-grid.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{ 'product-grid.css' | asset_url }}" />
 {%- liquid
 	assign section_heading = section.settings.heading
 	assign section_heading_left = section.settings.heading_left
@@ -17,7 +17,7 @@
 		</recently-viewed-products>
 	</div>
 </div>
-<script src="{{ 'recently-viewed-products.js' | asset_url }}" defer="defer"></script>
+<script type="lazyload_js" data-src="{{ 'recently-viewed-products.js' | asset_url }}"></script>
 {% schema %}
 	{
 		"name": "Recently viewed products",

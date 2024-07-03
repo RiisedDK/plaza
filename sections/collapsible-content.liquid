@@ -1,4 +1,4 @@
-{{- 'collapsible-content.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'collapsible-content.css' | asset_url -}}" />
 {%- liquid
 	assign section_heading = section.settings.heading
 	assign section_description = section.settings.description

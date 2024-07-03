@@ -1,0 +1,169 @@
+<style>
+.template-index .slideshow.main-slideshow:not(.flickity-enabled) > .slideshow__slide {
+    clip-path: unset !important;
+}
+
+.template-index .slideshow.main-slideshow:not(.flickity-enabled) .slideshow__slide-adapt-to-image {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.template-index  .slideshow  .slideshow__slide  .slideshow__slide-inner {
+    padding-top: 80px !important;
+} 
+
+@media(min-width:1200px){
+.template-collection .list-collections .collection-grid.collection-grid__carousel:not(.flickity-enabled ) {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.template-collection .list-collections .collection-grid.collection-grid__carousel:not(.flickity-enabled ) .carousel__slide:nth-child(n+6) {
+    display: none;
+} 
+}
+
+@media(max-width:767px){
+.template-collection .list-collections .collection-grid.collection-grid__carousel:not(.flickity-enabled ) {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.template-collection .list-collections .collection-grid.collection-grid__carousel:not(.flickity-enabled ) .carousel__slide:nth-child(n+3) {
+    display: none;
+}
+}
+
+.template-index .main-slideshow .flickity-slider > .slideshow__slide {
+    clip-path: unset !important;
+}
+
+.template-index .main-slideshow  .slideshow__slide-content * {
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: unset !important;
+}
+
+.template-index .main-slideshow  .slideshow__slide-bg,
+.template-index .main-slideshow  .slideshow__slide-bg img{
+    scale:1 !important;
+     animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: unset !important;
+}
+
+body, .body-font, .thb-product-detail .product-title {
+    font-style: normal;
+    font-weight: 400;
+    font-family: "Twentieth Century", sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .logolink.text-logo, .heading-font, .h1-xlarge, .h1-large, .customer-addresses .my-address .address-index {
+    font-style: normal;
+    font-weight: 400;
+    font-family: Garamond, Baskerville, Caslon, serif !important;
+}
+
+.promotional-banner--content-inner h2 {
+    font-weight: 400 !important;
+}
+
+h1.collection-banner--title {
+    font-weight: 400 !important;
+}
+
+.rte.text-size-regular h2{
+    font-weight:400 !important;
+}
+
+.metafield-rich_text_field h3,
+.metafield-rich_text_field h4{
+    font-weight:400 !important;
+}
+
+h3.clerk-subheadline {
+    font-family: 'Twentieth Century' !important;
+}
+
+@media(min-width: 768px) {
+.featured-collection {
+      margin-top: 90px !important;
+      margin-bottom: 90px !important;
+  }
+}
+
+/* .product-card-info a,
+.product-card-info span{
+    color: #686868 !important;
+} */
+
+.gallery__item-content h4.h3 {
+    font-weight:400 !important;
+}
+
+.gallery__item-content h4.h1 {
+    font-weight:400 !important;
+}
+
+.gallery__item-content-left h4.h2 {
+    font-weight:400 !important;
+}
+
+.brands-list span.columns.small-12 {
+    font-weight: 400 !important;
+}
+
+.rich-text__inner h3.h2 {
+    font-weight:400 !important;
+}
+
+.shopify-policy__title h1 {
+    font-weight: 400 !important;
+}
+
+.template-page-services_hul_i_oret .image-with-text__content--inner h3.h3 {
+    fonr-weight: 900 !important;
+}
+
+.product-title-container .product-title {
+    font-weight: 500 !important;
+}
+
+.countdown-accent {
+    color: #27a950 !important;
+}
+</style>
+
+{% if canonical_url contains '/pages/inspiration' %}
+
+<style>
+.animations-true .image-with-text-overlay--content .subheading, .animations-true .image-with-text-overlay--content .button {
+    opacity: 1 !important;
+}
+
+.animations-true .image-with-text-overlay--content h3 {
+    visibility: visible !important;
+}
+
+.animations-true .image-with-text-overlay--content .rte p {
+    visibility: visible !important;
+}
+
+h3.h1 {
+    font-weight: 400 !important;
+}
+</style>
+
+{% endif %}
+
+{%- if template contains 'page' -%}
+  <style>
+      h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .logolink.text-logo, .heading-font, .h1-xlarge, .h1-large, .customer-addresses .my-address .address-index {
+    font-style: normal;
+    font-weight: 400 !important;
+    font-family: Garamond, Baskerville, Caslon, serif !important;
+}      
+  </style>
+{%- endif -%}

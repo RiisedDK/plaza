@@ -1,4 +1,4 @@
-{{- 'slideshow.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'slideshow.css' | asset_url -}}" />
 {%- liquid
 	assign desktop_height = section.settings.desktop_height
 	assign mobile_height = section.settings.mobile_height
@@ -84,7 +84,7 @@
 									assign class = 'slideshow-image--desktop'
 								endif
 							 -%}
-							{%- render 'responsive-image', image: image, sizes: width, class: class -%}
+							{%- render 'responsive-image-sd', image: image, sizes: width, class: class -%}
 						{%- else -%}
 							{%- assign index = forloop.index | modulo: 2 | plus: 1 -%}
 							{{ 'lifestyle-' | append: index | placeholder_svg_tag: 'placeholder_svg_tag' }}
@@ -95,7 +95,7 @@
 								assign master_width = image.src.width | append: 'x' | append: image.src.height
 								assign width = '375x' | append: mobile_image_height | append: ',' | append: master_width
 							 -%}
-							{%- render 'responsive-image', image: image, sizes: width, class: 'slideshow-image--mobile' -%}
+							{%- render 'responsive-image-sm', image: image, sizes: width, class: 'slideshow-image--mobile' -%}
 						{%- endif -%}
 					</div>
 					{%- if block.settings.video_background -%}

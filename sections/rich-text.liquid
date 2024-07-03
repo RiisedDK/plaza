@@ -1,4 +1,4 @@
-{{- 'rich-text.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{ 'rich-text.css' | asset_url }}" />
 {%- liquid
 	assign section_width = section.settings.section_width
 	assign text_width = section.settings.text_width

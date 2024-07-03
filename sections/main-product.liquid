@@ -1,5 +1,5 @@
-{{- 'product.css' | asset_url | stylesheet_tag -}}
-{{- 'labels.css' | asset_url | stylesheet_tag -}}
+<link rel="stylesheet" data-href="{{- 'product.css' | asset_url -}}" />
+<link rel="stylesheet" data-href="{{- 'labels.css' | asset_url -}}" />
 {%- liquid
 	assign first_3d_model = product.media | where: "media_type", "model" | first
 	assign full_width = section.settings.full_width
@@ -145,7 +145,7 @@
 														data-index="{{ image_index }}"
 													>{% render 'svg-icons' with 'zoom' %}</a>
 													{%- endif -%}
-					                {%- render 'responsive-image', image: media.preview_image, sizes: sizes -%}
+					                {%- render 'responsive-image-product', image: media.preview_image, sizes: sizes -%}
 													{%- if alt != blank and display_captions -%}
 													<span class="figcaption">{{ alt | escape }}</span>
 													{%- endif -%}
@@ -277,9 +277,9 @@
 {%- endif -%}
 {%- if section.settings.lightbox != blank -%}
 {% render 'photoswipe' %}
-<link rel="stylesheet" href="{{ 'photoswipe.css' | asset_url }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" data-href="{{ 'photoswipe.css' | asset_url }}">
 {%- endif -%}
-<script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
+<script type="lazyload_js" data-src="{{ 'product.js' | asset_url }}"></script>
 
 {%- if first_3d_model -%}
   <script type="application/json" id="ProductJSON-{{ product.id }}">
